@@ -43,6 +43,7 @@
 #include "uhal/ProtocolMmap.hpp"
 #include "uhal/ProtocolPCIe.hpp"
 #include "uhal/ProtocolUIO.hpp"
+#include "uhal/ProtocolUIOPCI.hpp"
 
 
 
@@ -81,6 +82,7 @@ namespace uhal
       mInstance->add< Mmap > ( "ipbusmmap-2.0" , "Direct access to hardware via mmap, using IPbus version 2.0" );
       // ---------------------------------------------------------------------
       mInstance->add< UIO > ( "uioaxi-1.0" , "Direct access to hardware on AXI bus without IPbus" );
+      mInstance->add< UIOPCI > ( "uiopci-1.0" , "Direct access to hardware on pci bus without IPbus" );
 
     }
 
