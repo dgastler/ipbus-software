@@ -112,7 +112,7 @@ class UIOPCI : public ClientInterface {
   private:
     int fd[uiopci::DEVICES_MAX];
     uint32_t volatile * hw[uiopci::DEVICES_MAX];
-    uint32_t addrs[uioaxi::DEVICES_MAX];
+    uint32_t addrs[uiopci::DEVICES_MAX];
     char uionames[uiopci::DEVICES_MAX][128];
     uiopci::DevAddr decodeAddress (uint32_t uaddr);
     std::vector< ValWord<uint32_t> > valwords;

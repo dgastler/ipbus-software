@@ -89,7 +89,7 @@ namespace uhal {
       // device number is the number read from the most significant 8 bits of the address
       // size should be read from /sys/class/uio*/maps/map0/size
       int devnum=-1, size=0;
-      char label[128]="", sysfsResourceName[128]=""; 
+      char label[128], sysfsResourceName[128]; 
       // get the device number out from the node
       devnum = decodeAddress(lNode->getNode(*nodeId).getAddress()).device;
       // search through the file system to see if there is a uio that matches the name
@@ -105,24 +105,31 @@ namespace uhal {
 	if (!exists(x->path()/"device")) {
 	  continue;
 	}
-	labelfile = fopen((x->path().native()+"/device").c_str(),"r");
+	labelfile = fopen((x->path().native()+"/device/device").c_str(),"r");
 	label[0] = 'P';
 	label[1] = 'C';
 	label[2] = 'I';
 	label[3] = '_';
-	fgets(label+4,128,labelfile); fclose(labelfile);
+	fgets(label+4,124,labelfile); fclose(labelfile);
+	//clear EOL
+	for(size_t iLabel = 0;iLabel < 128;iLabel++){
+	  if('\n' == label[iLabel]){
+	    label[iLabel] = '\0';
+	    break;
+	  }	    
+	}
 	if(!strcmp(label, (*nodeId).c_str())){  
 	  //Open the resource file and subtract the first two lines to get the memory size
-	  std::ifstream inSizeFile((x->path().native()+"resource").c_str(),std::ifstream::in);
+	  std::ifstream inSizeFile((x->path().native()+"/device/resource").c_str(),std::ifstream::in);
 	  uint64_t memStart,memEnd;
-	  inSizeFile >> memStart ;
-	  inSizeFile >> memEnd;
+	  inSizeFile >> std::hex >> memStart ;
+	  inSizeFile >> std::hex >> memEnd;
 	  size = (memEnd - memStart + 1)/4;
-
 	  //save the name of the resource file for this. 
-	  strcpy(sysfsResourceName,(x->path().native()+"/resource0").c_str());
+	  strcpy(sysfsResourceName,(x->path().native()+"/device/resource0").c_str());
 	  break;
-	}      
+	}else{
+	}
       }
       //save the mapping
       strcpy(uionames[devnum],sysfsResourceName);
@@ -143,7 +150,7 @@ namespace uhal {
     const char *prefix = "/dev";
     size_t devpath_cap = strlen(prefix)+1+strlen(name)+1;
     char *devpath = (char*)malloc(devpath_cap);
-    snprintf(devpath,devpath_cap, "%s/%s", prefix, name);
+    //    snprintf(devpath,devpath_cap, "%s/%s", prefix, name);
     fd[i] = open(name, O_RDWR|O_SYNC);
     if (-1==fd[i]) {
       log( Debug() , "Failed to open ", name, ": ", strerror(errno));
