@@ -144,20 +144,20 @@ namespace uhal {
     size_t devpath_cap = strlen(prefix)+1+strlen(name)+1;
     char *devpath = (char*)malloc(devpath_cap);
     snprintf(devpath,devpath_cap, "%s/%s", prefix, name);
-    fd[i] = open(devpath, O_RDWR|O_SYNC);
+    fd[i] = open(name, O_RDWR|O_SYNC);
     if (-1==fd[i]) {
-      log( Debug() , "Failed to open ", devpath, ": ", strerror(errno));
+      log( Debug() , "Failed to open ", name, ": ", strerror(errno));
       goto end;
     }
     hw[i] = (uint32_t*)mmap( NULL, size*sizeof(uint32_t),
 			     PROT_READ|PROT_WRITE, MAP_SHARED,
 			     fd[i], 0x0);
     if (hw[i]==MAP_FAILED) {
-      log ( Debug() , "Failed to map ", devpath, ": ",  strerror(errno));
+      log ( Debug() , "Failed to map ", name, ": ",  strerror(errno));
       hw[i]=NULL;
       goto end;
     }
-    log ( Debug(), "Mapped ", devpath, " as device number ", Integer( i, IntFmt<hex,fixed>()),
+    log ( Debug(), "Mapped ",name, " as device number ", Integer( i, IntFmt<hex,fixed>()),
 	  " size ", Integer( size, IntFmt<hex, fixed>()));
   end:
     free(devpath);
