@@ -3,19 +3,14 @@ BUILD_HOME := $(shell cd $(BUILD_HOME); pwd)
 
 $(info Using BUILD_HOME=${BUILD_HOME})
 
-
 # Compilers
-CXX = arm-linux-gnueabihf-g++
+CXX = g++
 LD = ${CXX}
 
-# variables for cross-compilling
-RUNTIME_LDPATH=/work
-COMPILETIME_ROOT=--sysroot=/mnt
-
 # Compiler flags
-CXXFLAGS = -g -Wall -pedantic -O3 -MMD -MP -fPIC ${COMPILETIME_ROOT}
+CXXFLAGS = -g -Wall -pedantic -O3 -MMD -MP -fPIC
 #						-fprofile-arcs -ftest-coverages
-LDFLAGS = -Wall -g -O3 -fPIC ${COMPILETIME_ROOT}
+LDFLAGS = -Wall -g -O3 -fPIC
 #										 -lgcov -coverage
 
 # Tools
